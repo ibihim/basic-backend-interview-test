@@ -5,7 +5,7 @@ const mocha = require('gulp-mocha');
 
 const reporter  = 'nyan';
 const timeout   = 10000;
-const srcDir    = 'test/**/*-test.js';
+const srcDir    = 'tests/**/*-test.js';
 const readFalse = { read: false };
 const mochaConf = { reporter, timeout };
 
