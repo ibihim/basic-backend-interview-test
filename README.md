@@ -1,85 +1,73 @@
-# Basic Backend Developer Interview
+# Asteroid Tracker
 
-Dear candidate, please follow this readme and solve all questions.
+Tracks Near-Earth Objects (NEOs).
 
-> Before you can start, you should prepare your development environment.
+## API
 
-**This test requires:**
-- access to the internet
-- your favourite IDE
-- (PHP) working dev environment with PHP 7 and symfony 3.x
-- (Node) working dev environment with Node.js LTS
-- database (MongoDB, Postgres, MySQL)
-- nginx or alternative simple dev web server
+### GET /
 
-**Good luck!**
+Returns simple JSON. Can be used as ping check.
 
+__Response:__ ```{ "hello": "world" }```
 
---------
+### GET /neo/hazardous
 
+Returns all potentially hazardous asteroids as JSON.
 
-## Test tasks:
+__Response example:__
 
-**NOTE:** You are free to use any framework you wish. Bonus points for an explanation of your choice.
+TODO:
+```{
+    "date": "",
+    "reference": "",
+    "name": "",
+    "speed": "",
+    "isHazardous": ""
+}
+```
 
-1. Specify a default controller
-  - for route `/`
-  - with a proper json return `{"hello":"world!"}`
+### GET /neo/fastest?hazardous=(true|false)
 
-2. Use the api.nasa.gov
-  - the API-KEY is `N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD`
-  - documentation: https://api.nasa.gov/neo/?api_key=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD
-  
-3. Write a command
-  - to request the data from the last 3 days from nasa api
-  - response contains count of Near-Earth Objects (NEOs)
-  - persist the values in your DB
-  - Define the model as follows:
-    - date
-    - reference (neo_reference_id)
-    - name
-    - speed (kilometers_per_hour)
-    - is hazardous (is_potentially_hazardous_asteroid)
+Returns fastest asteroid, hazardous or non hazardous. Depends on parameter given.
 
-4. Create a route `/neo/hazardous`
-  - display all DB entries which contain potentially hazardous asteroids
-  - format JSON
+__Default:__ ```false```
 
-5. Create a route `/neo/fastest?hazardous=(true|false)`
-  - analyze all data
-  - calculate and return the model of the fastest asteroid
-  - with a hazardous parameter, where `true` means `is hazardous`
-  - default hazardous value is `false`
-  - format JSON
+__Response example:__
 
-6. Create a route `/neo/best-year?hazardous=(true|false)`
-  - analyze all data
-  - calculate and return a year with most asteroids
-  - with a hazardous parameter, where `true` means `is hazardous`
-  - default hazardous value is `false`
-  - format JSON
+TODO:
+```{
+    "date": "",
+    "reference": "",
+    "name": "",
+    "speed": "",
+    "isHazardous": ""
+}
+```
 
-7. Create a route `/neo/best-month?hazardous=(true|false)`
-  - analyze all data
-  - calculate and return a month with most asteroids (not a month in a year)
-  - with a hazardous parameter, where `true` means `is hazardous`
-  - default hazardous value is `false`
-  - format JSON
-   
-## Additional Instructions
+### GET /neo/best-year?hazardous=(true|false)
 
-- Fork this repository
-- Tests are not optional
-- (PHP) Symfony is the expected framework
-- After you're done, provide us the link to your repository.
-- Leave comments where you were not sure how to properly proceed.
-- Implementations without a README will be automatically rejected.
+Returns the year with the most asteroids. Can be narrowed down to hazardous asteroids, depending on parameter given.
 
-## Bonus Points
+__Response example:__
 
-- Clean code!
-- Knowledge of application flow.
-- Knowledge of modern best practices/coding patterns.
-- Componential thinking.
-- Knowledge of Docker.
-- Usage of MongoDB as persistance storage.
+TODO:
+```{
+    "year": "",
+    "asteroid_count": "",
+    "isHazardous": ""
+}
+```
+
+### GET /neo/best-month?hazardous=(true|false)
+
+Returns the month with the most asteroids (TODO rolling month?). Can be narrowed down to hazardous asteroids, depending on parameter given.
+
+__Response example:__
+
+TODO:
+```{
+    "year": "",
+    "asteroid_count": "",
+    "isHazardous": ""
+}
+```
