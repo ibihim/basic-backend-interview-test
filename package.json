@@ -8,13 +8,16 @@
   },
   "dependencies": {
     "express": "^4.15.4",
-    "winston": "^2.3.1"
+    "http-status-codes": "^1.2.0",
+    "morgan": "^1.8.2",
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-eslint": "^4.0.0",
     "gulp-mocha": "^4.3.1",
-    "http-status-codes": "^1.2.0",
+    "nodemon": "^1.11.0",
     "supertest": "^3.0.0"
   },
   "scripts": {
