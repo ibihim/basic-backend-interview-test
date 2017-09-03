@@ -1,0 +1,33 @@
+{
+  "name": "basic-backend-interview-test",
+  "version": "1.0.0",
+  "description": "Near-Earth Objects tracker",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0",
+    "gulp-mocha": "^4.3.1"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "lint": "gulp lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ibihim/basic-backend-interview-test.git"
+  },
+  "keywords": [
+    "NEO",
+    "asteroids"
+  ],
+  "author": "Krzysztof Ostrowski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ibihim/basic-backend-interview-test/issues"
+  },
+  "homepage": "https://github.com/ibihim/basic-backend-interview-test#readme"
+}

@@ -9,4 +9,6 @@
 /build/
 /vendor/
 /bin/
+
 .idea
+node_modules
