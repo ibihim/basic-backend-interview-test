@@ -6,17 +6,16 @@ const _ = require('lodash/fp');
 
 const ROOT = '../../../..';
 const { getNeo, getFeed } = require(`${ ROOT }/lib/nasa/wrapper`);
+const {
+    getNearEarthObjects,
+    getNeoReferenceId,
+    disjointLists,
+    sameListAs,
+    checkListLength
+} = require(`${ ROOT }/tests/utils`);
 
 const API_KEY = process.env.API_KEY;
 const DATE_FORMAT = 'YYYY-MM-DD';
-
-const getNearEarthObjects = resObj => resObj.near_earth_objects;
-const getNeoReferenceId = obj => obj.neo_reference_id;
-
-// TODO move to test utils
-const disjointLists = ([ listA, listB ]) => expect(listA).to.not.have.members(listB);
-const sameListAs = listA => listB => expect(listB.sort()).to.eql(listA.sort());
-const checkListLength = expectedLength => list => expect(list).to.have.lengthOf(expectedLength);
 
 describe('wrapper', () => {
 
