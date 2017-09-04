@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  mongoDB:
+    image: mongo
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 27017:27017
+    restart: always
+  node:
+    depends_on:
+      - mongoDB
+    build: .
+    restart: always
+    environment:
+      - MONGO_DB_URL=mongodb://mongoDB:27017/nasa
+
+volumes:
+  mongo_data:
