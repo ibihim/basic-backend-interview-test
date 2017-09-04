@@ -5,7 +5,7 @@ const expect = require('chai').expect;
 const _ = require('lodash/fp');
 
 const ROOT = '../../../..';
-const { neo, feed } = require(`${ ROOT }/lib/nasa/wrapper`);
+const { getNeo, getFeed } = require(`${ ROOT }/lib/nasa/wrapper`);
 
 const API_KEY = process.env.API_KEY;
 const DATE_FORMAT = 'YYYY-MM-DD';
@@ -13,6 +13,7 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 const getNearEarthObjects = resObj => resObj.near_earth_objects;
 const getNeoReferenceId = obj => obj.neo_reference_id;
 
+// TODO move to test utils
 const disjointLists = ([ listA, listB ]) => expect(listA).to.not.have.members(listB);
 const sameListAs = listA => listB => expect(listB.sort()).to.eql(listA.sort());
 const checkListLength = expectedLength => list => expect(list).to.have.lengthOf(expectedLength);
@@ -26,7 +27,7 @@ describe('wrapper', () => {
             const DEFAULT_LENGTH = 10;
             const checkMinimalLength = checkListLength(DEFAULT_LENGTH);
 
-            neo.get()
+            getNeo()
                .then(getNearEarthObjects)
                .then(checkMinimalLength)
                .then(() => done())
@@ -39,7 +40,7 @@ describe('wrapper', () => {
             const pageSize = 10;
 
 
-            const getNeoIdsFor = (page, size) => neo.get(page, size)
+            const getNeoIdsFor = (page, size) => getNeo(page, size)
                                                     .then(getNearEarthObjects)
                                                     .then(_.tap(checkListLength(pageSize)))
                                                     .then(_.map(getNeoReferenceId));
@@ -65,7 +66,7 @@ describe('wrapper', () => {
             const YESTERDAY = subtractDays(1);
             const DAY_BEFORE_YESTERDAY = subtractDays(2);
 
-            feed.get(DAY_BEFORE_YESTERDAY)
+            getFeed(DAY_BEFORE_YESTERDAY)
                 .then(getNearEarthObjects)
                 .then(_.keys)
                 .then(sameListAs([ TODAY, YESTERDAY, DAY_BEFORE_YESTERDAY ]))
@@ -74,13 +75,18 @@ describe('wrapper', () => {
 
         });
 
-        it.skip('should return data for the last month', (done) => {
-            const lastMonth = moment().utc().subtract(1, 'month').month();
+        it('should return data for the last month', (done) => {
+            const currentDate = moment().utc();
+            const aMonthBefore = currentDate.subtract(1, 'month');
+            const lastMonthAsInt = aMonthBefore.month();
+            const startOfLastMonth = aMonthBefore.startOf('month').format(DATE_FORMAT);
+            const endOfLastMonth = aMonthBefore.endOf('month').format(DATE_FORMAT);
 
-            feed.get(lastMonth)
+            getFeed(startOfLastMonth, endOfLastMonth)
                 .then(getNearEarthObjects)
                 .then(_.keys)
-                .then(sameListAs([ TODAY, YESTERDAY, DAY_BEFORE_YESTERDAY ]))
+                .then(_.map(dateString => moment(dateString).month()))
+                .then(_.forEach(month => expect(month).to.equal(lastMonthAsInt)))
                 .then(() => done())
                 .catch(done);
         });

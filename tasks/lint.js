@@ -3,7 +3,7 @@
 const gulp   = require('gulp');
 const eslint = require('gulp-eslint');
 
-const srcDir = ['**/*.js', '!node_modules/**'];
+const srcDir = [ '**/*.js', '!node_modules/**' ];
 
 module.exports = () =>
     gulp.src(srcDir)
