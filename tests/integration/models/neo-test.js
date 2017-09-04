@@ -1,11 +1,12 @@
 'use strict';
 
+const _      = require('lodash/fp');
 const moment = require('moment');
 const expect = require('chai').expect;
 
 const ROOT = '../../..';
 const db = require(`${ ROOT }/lib/db`);
-const Neo = require(`${ ROOT }/models/neo`);
+const Neo = require(`${ ROOT }/models/Neo`);
 const { getFeed } = require(`${ ROOT }/lib/nasa/wrapper`);
 const {
     firstElement,
@@ -18,13 +19,35 @@ const {
 const TODAY = moment().utc()
                       .format(DEFAULT_DATE_FORMAT);
 
+const mapParams = params => ({
+    date: params.date,
+    reference: params.neo_reference_id,
+    name: params.name,
+    speed: params.speed,
+    isHazardous: params.is_potentially_hazardous_asteroid
+});
+
+const pepareList = listGroupedByDate => {
+    const neoList = listGroupedByDate[ TODAY ];
+    const liftData = neo => _.extend({
+        date: TODAY, // TODO wtf.. asteroids pass by several times
+        speed: neo.close_approach_data[0].relative_velocity.kilometers_per_hour
+    }, neo);
+
+    return neoList.map(_.flow(liftData, mapParams));
+};
+
 const saveNeo = params => new Neo(params).save();
 const findNeo = params => Neo.find(params).exec();
+
 const verifiedSave = params =>
     saveNeo(params).then(() => findNeo(params))
-                   .then(neo =>
-                       expect(getNeoReferenceId(neo)).to.equal(getNeoReferenceId(params))
-                   );
+                   .then(neo => expect(getNeoReferenceId(neo)).to.equal(getNeoReferenceId(params)));
+
+const removeNeos = () =>
+    new Promise((resolve, reject) =>
+        Neo.remove({}, err => err ? reject(err) : resolve(err))
+    );
 
 describe('Neo', () => {
 
@@ -37,9 +60,17 @@ describe('Neo', () => {
                ])
                .then(firstElement)
                .then(getNearEarthObjects)
+               .then(pepareList)
                .then(fetchedList => (neoList = fetchedList))
                .then(() => done())
                .catch(done);
+    });
+
+    after(done => {
+        removeNeos()
+            .then(() => db.closeConnection())
+            .then(() => done())
+            .catch(done);
     });
 
     it('should be able to store a NEO', (done) => {
