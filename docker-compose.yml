@@ -12,6 +12,8 @@ services:
     depends_on:
       - mongoDB
     build: .
+    ports:
+      - 8000:8000
     restart: always
     environment:
       - MONGO_DB_URL=mongodb://mongoDB:27017/nasa

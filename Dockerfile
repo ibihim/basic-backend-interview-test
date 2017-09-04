@@ -1,5 +1,6 @@
 FROM node
 
+RUN mkdir /app
 WORKDIR /app
 
 ADD package.json .

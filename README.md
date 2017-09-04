@@ -71,3 +71,11 @@ TODO:
     "isHazardous": ""
 }
 ```
+
+## Additional Information
+
+### Timezone
+
+Timezone used it UTC. Always. Can't stress out how wrong it is to use local time zone!
+
+Yes, you silicon valley companies... with local timezone as default :D
