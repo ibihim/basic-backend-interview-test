@@ -27,7 +27,7 @@ const mapParams = params => ({
     isHazardous: params.is_potentially_hazardous_asteroid
 });
 
-const pepareList = listGroupedByDate => {
+const prepareList = listGroupedByDate => {
     const neoList = listGroupedByDate[ TODAY ];
     const liftData = neo => _.extend({
         date: TODAY, // TODO wtf.. asteroids pass by several times
@@ -60,7 +60,7 @@ describe('Neo', () => {
                ])
                .then(firstElement)
                .then(getNearEarthObjects)
-               .then(pepareList)
+               .then(prepareList)
                .then(fetchedList => (neoList = fetchedList))
                .then(() => done())
                .catch(done);
