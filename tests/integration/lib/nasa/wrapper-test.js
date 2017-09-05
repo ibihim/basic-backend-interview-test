@@ -11,7 +11,8 @@ const {
     getNeoReferenceId,
     disjointLists,
     sameListAs,
-    checkListLength
+    checkListLength,
+    createFormattedDaysList
 } = require(`${ ROOT }/tests/utils`);
 
 const API_KEY = process.env.API_KEY;
@@ -57,18 +58,14 @@ describe('wrapper', () => {
 
     describe('for feed', () => {
         it('should return data of the last 3 days', (done) => {
-            const subtractDays = dayCount =>
-                moment().utc()
-                        .subtract(dayCount, 'days')
-                        .format(DATE_FORMAT);
-            const TODAY = subtractDays(0);
-            const YESTERDAY = subtractDays(1);
-            const DAY_BEFORE_YESTERDAY = subtractDays(2);
+            const DAY_BEFORE_YESTERDAY = moment().utc()
+                                                 .subtract(2, 'days');
+            const expectedDaysList = createFormattedDaysList(DAY_BEFORE_YESTERDAY);
 
-            getFeed(DAY_BEFORE_YESTERDAY)
+            getFeed(DAY_BEFORE_YESTERDAY.format(DATE_FORMAT))
                 .then(getNearEarthObjects)
                 .then(_.keys)
-                .then(sameListAs([ TODAY, YESTERDAY, DAY_BEFORE_YESTERDAY ]))
+                .then(sameListAs(expectedDaysList))
                 .then(() => done())
                 .catch(done);
 

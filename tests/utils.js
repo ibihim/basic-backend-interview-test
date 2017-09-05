@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require('moment');
 const expect = require('chai').expect;
 
 const DEFAULT_MONGO_URL   = 'mongodb://mongodb:27017/nasatest';
@@ -19,6 +20,29 @@ const sameListAs          = listA => listB =>
 const checkListLength     = expectedLength => list =>
     expect(list).to.have.lengthOf(expectedLength);
 
+const daysGenerator = from => ({
+    *[Symbol.iterator]() {
+        while (true) {
+            yield from;
+            from.add(1, 'day');
+        }
+    }
+});
+
+const createFormattedDaysList = (from, to = moment().utc()) => {
+    const arr = [];
+
+    for (const day of daysGenerator(from.clone())) {
+        if (day.isAfter(to)) {
+            break;
+        }
+
+        arr.push(day.format(DEFAULT_DATE_FORMAT));
+    }
+
+    return arr;
+};
+
 module.exports = {
     DEFAULT_MONGO_URL,
     MONGO_DB_URL,
@@ -28,5 +52,6 @@ module.exports = {
     getNeoReferenceId,
     disjointLists,
     sameListAs,
-    checkListLength
+    checkListLength,
+    createFormattedDaysList
 };
