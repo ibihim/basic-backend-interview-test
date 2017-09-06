@@ -25,7 +25,7 @@ describe('worker', () => {
             .catch(done);
     });
 
-    it.only('should be possible to store the last 3 days', (done) => {
+    it('should be possible to store the last 3 days', (done) => {
         worker.storeLastDays(3)
             .then(count => {
                 expect(count).to.be.at.least(1);

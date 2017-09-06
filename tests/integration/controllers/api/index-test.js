@@ -6,15 +6,16 @@ const HttpStatus = require('http-status-codes');
 const ROOT = '../../../..';
 const app = require(`${ ROOT }/app`);
 
-describe('GET /', () => {
+describe('main controller', () => {
     it('should return hello-world json', (done) => {
         request(app)
-            .get('/')
             .set('Accept', 'application/json')
+            .get('/')
             .expect('Content-Type', /json/)
             .expect(
                 HttpStatus.OK,
                 { hello: 'world' },
-                done);
+                done
+            );
     });
 });

@@ -12,6 +12,6 @@
 
 .idea
 node_modules
-logs
+logs/*.log
 *.pid
 data

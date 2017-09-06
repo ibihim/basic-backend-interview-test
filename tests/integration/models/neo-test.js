@@ -12,6 +12,8 @@ const {
     firstElement,
     getNearEarthObjects,
     getNeoReferenceId,
+    saveNeo,
+    findNeo,
     removeNeos,
     MONGO_DB_URL,
     DEFAULT_DATE_FORMAT
@@ -37,9 +39,6 @@ const prepareList = listGroupedByDate => {
 
     return neoList.map(_.flow(liftData, mapParams));
 };
-
-const saveNeo = params => new Neo(params).save();
-const findNeo = params => Neo.find(params).exec();
 
 const verifiedSave = params =>
     saveNeo(params).then(() => findNeo(params))
