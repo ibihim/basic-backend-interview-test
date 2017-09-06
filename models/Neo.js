@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const makeNeoModel = () => {
     const neoSchema = new Schema({
-        date: Date,
+        date: Date, // TODO should be more like an Array
         reference: {
             type: String,
             required: true,

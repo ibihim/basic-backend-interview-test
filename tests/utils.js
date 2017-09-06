@@ -3,12 +3,15 @@
 const moment = require('moment');
 const expect = require('chai').expect;
 
+const ROOT = '..';
+const Neo = require(`${ ROOT }/models/Neo`);
+const { DEFAULT_DATE_FORMAT } = require(`${ ROOT }/lib/constants`);
+const { getNearEarthObjects } = require(`${ ROOT }/lib/utils`);
+
 const DEFAULT_MONGO_URL   = 'mongodb://mongodb:27017/nasatest';
 const MONGO_DB_URL        = process.env.MONGO_DB_URL || DEFAULT_MONGO_URL;
-const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 
 const firstElement        = arr => arr[0];
-const getNearEarthObjects = resObj => resObj.near_earth_objects;
 const getNeoReferenceId   = obj => obj.neo_reference_id;
 
 const disjointLists       = ([ listA, listB ]) =>
@@ -43,6 +46,11 @@ const createFormattedDaysList = (from, to = moment().utc()) => {
     return arr;
 };
 
+const removeNeos = () =>
+    new Promise((resolve, reject) =>
+        Neo.remove({}, err => err ? reject(err) : resolve(err))
+    );
+
 module.exports = {
     DEFAULT_MONGO_URL,
     MONGO_DB_URL,
@@ -53,5 +61,6 @@ module.exports = {
     disjointLists,
     sameListAs,
     checkListLength,
-    createFormattedDaysList
+    createFormattedDaysList,
+    removeNeos
 };

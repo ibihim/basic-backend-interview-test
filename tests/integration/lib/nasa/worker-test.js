@@ -1,18 +1,36 @@
 'use strict';
 
-const moment = require('moment');
+const expect = require('chai').expect;
 
-const ROOT = '../../..';
+const ROOT = '../../../..';
+const db = require(`${ ROOT }/lib/db`);
 const worker = require(`${ ROOT }/lib/nasa/worker`);
-const { createFormattedDaysList } = require(`${ ROOT }/tests/utils`);
+const { 
+    MONGO_DB_URL,
+    removeNeos
+} = require(`${ ROOT }/tests/utils`);
 
+describe('worker', () => {
 
-describe.skip('worker', () => {
-    it('should be possible to store the last 3 days', (done) => {
-        const twoDaysAgo = moment().utc()
-                                   .subtract(2, 'days');
-        const last3DaysList = createFormattedDaysList(twoDaysAgo);
-        worker.grabLastDays(3)
-           .then();
+    before(done => {
+        db.connectTo(MONGO_DB_URL)
+            .then(() => done())
+            .catch(done);
+    });
+
+    after(done => {
+        removeNeos()
+            .then(() => db.closeConnection())
+            .then(() => done())
+            .catch(done);
+    });
+
+    it.only('should be possible to store the last 3 days', (done) => {
+        worker.storeLastDays(3)
+            .then(count => {
+                expect(count).to.be.at.least(1);
+            })
+            .then(() => done())
+            .catch(done);
     });
 });

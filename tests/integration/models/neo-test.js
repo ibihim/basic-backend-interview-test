@@ -12,6 +12,7 @@ const {
     firstElement,
     getNearEarthObjects,
     getNeoReferenceId,
+    removeNeos,
     MONGO_DB_URL,
     DEFAULT_DATE_FORMAT
 } = require(`${ ROOT }/tests/utils`);
@@ -30,7 +31,7 @@ const mapParams = params => ({
 const prepareList = listGroupedByDate => {
     const neoList = listGroupedByDate[ TODAY ];
     const liftData = neo => _.extend({
-        date: TODAY, // TODO wtf.. asteroids pass by several times
+        date: TODAY,
         speed: neo.close_approach_data[0].relative_velocity.kilometers_per_hour
     }, neo);
 
@@ -43,11 +44,6 @@ const findNeo = params => Neo.find(params).exec();
 const verifiedSave = params =>
     saveNeo(params).then(() => findNeo(params))
                    .then(neo => expect(getNeoReferenceId(neo)).to.equal(getNeoReferenceId(params)));
-
-const removeNeos = () =>
-    new Promise((resolve, reject) =>
-        Neo.remove({}, err => err ? reject(err) : resolve(err))
-    );
 
 describe('Neo', () => {
 

@@ -74,6 +74,12 @@ TODO:
 
 ## Additional Information
 
+### TODOS
+
+- Change model so that speed and date are Arrays, as Asteroids may meet the Earth more often than once.
+- Check for Promises and if they are caught properly.
+- Check if necessary logging is happening.
+
 ### Timezone
 
 Timezone used it UTC. Always. Can't stress out how wrong it is to use local time zone!
