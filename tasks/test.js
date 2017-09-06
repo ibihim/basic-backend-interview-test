@@ -3,6 +3,9 @@
 const gulp  = require('gulp');
 const mocha = require('gulp-mocha');
 
+const ROOT = '..';
+require(`${ ROOT }/lib/utils/logger`).level = 'error';
+
 const reporter  = 'nyan';
 const timeout   = 10000;
 const srcDir    = 'tests/**/*-test.js';

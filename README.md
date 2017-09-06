@@ -79,6 +79,7 @@ TODO:
 - Change model so that speed and date are Arrays, as Asteroids may meet the Earth more often than once.
 - Check for Promises and if they are caught properly.
 - Check if necessary logging is happening.
+- Add documentation for lint, test and docker in docs folder
 
 ### Timezone
 

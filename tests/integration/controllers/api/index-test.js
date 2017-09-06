@@ -9,8 +9,8 @@ const app = require(`${ ROOT }/app`);
 describe('main controller', () => {
     it('should return hello-world json', (done) => {
         request(app)
-            .set('Accept', 'application/json')
             .get('/')
+            .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(
                 HttpStatus.OK,

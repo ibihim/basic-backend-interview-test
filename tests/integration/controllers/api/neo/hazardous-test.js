@@ -13,15 +13,18 @@ const {
     removeNeos
 } = require(`${ ROOT }/tests/utils`);
 
-describe('hazardous controller', () => {
+describe.only('hazardous controller', () => {
 
     let storedNeos;
 
     before(done => {
         db.connectTo(MONGO_DB_URL)
             .then(() => worker.storeLastDays(5))
-            .then(() => findNeo())
-            .then(foundNeos => storedNeos = foundNeos)
+            .then(() => findNeo({ isHazardous: true }))
+            .then(foundNeos => {
+                console.log(foundNeos);
+                storedNeos = foundNeos
+            })
             .then(() => done())
             .catch(done);
     });
@@ -33,16 +36,19 @@ describe('hazardous controller', () => {
             .catch(done);
     });
 
-    it('should return a list of hazardous asteroids', (done) => {
-        const makeRequest = () =>
-            request(app)
-                .set('Accept', 'application/json')
-                .get('/neo/hazardous')
-                .expect('Content-Type', /json/)
-                .expect(
-                    HttpStatus.OK,
-                    storedNeos,
-                    done
-                );
+    it('should return a list of hazardous asteroids', (done) => {        
+        request(app)
+            .get('/neo/hazardous')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(HttpStatus.OK)
+            .then(response => {
+                console.log('storedNeos');
+                console.log(storedNeos);
+                console.log('response.body');
+                console.log(response.body);
+            })
+            .then(() => done())
+            .catch(done);
     });
 });

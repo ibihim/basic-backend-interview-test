@@ -47,7 +47,7 @@ const createFormattedDaysList = (from, to = moment().utc()) => {
 };
 
 const saveNeo = params => new Neo(params).save();
-const findNeo = (params = {}) => Neo.find(params).exec();
+const findNeo = (params = {}) => Neo.find(params);
 const removeNeos = () =>
     new Promise((resolve, reject) =>
         Neo.remove({}, err => err ? reject(err) : resolve(err))
