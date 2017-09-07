@@ -1,14 +1,20 @@
 'use strict';
 
+const _ = require('lodash/fp');
 const expect = require('chai').expect;
 
 const ROOT = '../../../..';
 const db = require(`${ ROOT }/lib/db`);
 const worker = require(`${ ROOT }/lib/nasa/worker`);
-const { 
+const {
     MONGO_DB_URL,
     removeNeos
 } = require(`${ ROOT }/tests/utils`);
+
+
+// debug
+const Neo = require(`${ ROOT }/models/Neo`);
+
 
 describe('worker', () => {
 
@@ -26,10 +32,13 @@ describe('worker', () => {
     });
 
     it('should be possible to store the last 3 days', (done) => {
+        const verifyStoredNeosCount = count =>
+            Neo.find({}).exec()
+               .then(found => expect(found).to.have.length(count));
+
         worker.storeLastDays(3)
-            .then(count => {
-                expect(count).to.be.at.least(1);
-            })
+            .then(_.tap(count => expect(count).to.be.at.least(1)))
+            .then(verifyStoredNeosCount)
             .then(() => done())
             .catch(done);
     });

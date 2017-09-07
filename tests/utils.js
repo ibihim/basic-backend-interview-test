@@ -1,30 +1,37 @@
 'use strict';
 
+const _      = require('lodash/fp');
 const moment = require('moment');
 const expect = require('chai').expect;
 
-const ROOT = '..';
-const Neo = require(`${ ROOT }/models/Neo`);
+const ROOT                    = '..';
+const Neo                     = require(`${ ROOT }/models/Neo`);
 const { DEFAULT_DATE_FORMAT } = require(`${ ROOT }/lib/constants`);
 const { getNearEarthObjects } = require(`${ ROOT }/lib/utils`);
 
-const DEFAULT_MONGO_URL   = 'mongodb://mongodb:27017/nasatest';
-const MONGO_DB_URL        = process.env.MONGO_DB_URL || DEFAULT_MONGO_URL;
+const DEFAULT_MONGO_URL = 'mongodb://mongodb:27017/nasatest';
+const MONGO_DB_URL      = process.env.MONGO_DB_URL || DEFAULT_MONGO_URL;
 
-const firstElement        = arr => arr[0];
-const getNeoReferenceId   = obj => obj.neo_reference_id;
-
-const disjointLists       = ([ listA, listB ]) =>
+const getNeoReferenceId = _.get('neo_reference_id');
+const disjointLists     = ([ listA, listB ]) =>
     expect(listA).to.not.have.members(listB);
 
-const sameListAs          = listA => listB =>
-    expect(listB.sort()).to.eql(listA.sort());
+const sameListAs = expectedList => foundList =>
+    expect(foundList.sort()).to.eql(expectedList.sort());
 
-const checkListLength     = expectedLength => list =>
+const sameNeoListAs = expectedList => foundList => {
+    const pickProperties    = [ 'reference', 'name', 'speed', 'isHazardous' ];
+    const cleanExpectedList = _.map(_.pick(pickProperties), expectedList);
+    const cleanFoundList    = _.map(_.pick(pickProperties), foundList);
+
+    sameListAs(cleanExpectedList)(cleanFoundList);
+};
+
+const checkListLength = expectedLength => list =>
     expect(list).to.have.lengthOf(expectedLength);
 
 const daysGenerator = from => ({
-    *[Symbol.iterator]() {
+    * [Symbol.iterator]() {
         while (true) {
             yield from;
             from.add(1, 'day');
@@ -46,8 +53,8 @@ const createFormattedDaysList = (from, to = moment().utc()) => {
     return arr;
 };
 
-const saveNeo = params => new Neo(params).save();
-const findNeo = (params = {}) => Neo.find(params);
+const saveNeo    = params => new Neo(params).save();
+const findNeo    = (params = {}) => Neo.find(params);
 const removeNeos = () =>
     new Promise((resolve, reject) =>
         Neo.remove({}, err => err ? reject(err) : resolve(err))
@@ -57,11 +64,11 @@ module.exports = {
     DEFAULT_MONGO_URL,
     MONGO_DB_URL,
     DEFAULT_DATE_FORMAT,
-    firstElement,
     getNearEarthObjects,
     getNeoReferenceId,
     disjointLists,
     sameListAs,
+    sameNeoListAs,
     checkListLength,
     createFormattedDaysList,
     saveNeo,

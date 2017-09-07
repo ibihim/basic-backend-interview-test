@@ -86,3 +86,5 @@ TODO:
 Timezone used it UTC. Always. Can't stress out how wrong it is to use local time zone!
 
 Yes, you silicon valley companies... with local timezone as default :D
+
+It may be that, depending on your timezone, the tests fail. In MEST mornings the newest day was not yet released.

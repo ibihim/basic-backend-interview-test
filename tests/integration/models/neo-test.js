@@ -6,10 +6,8 @@ const expect = require('chai').expect;
 
 const ROOT = '../../..';
 const db = require(`${ ROOT }/lib/db`);
-const Neo = require(`${ ROOT }/models/Neo`);
 const { getFeed } = require(`${ ROOT }/lib/nasa/wrapper`);
 const {
-    firstElement,
     getNearEarthObjects,
     getNeoReferenceId,
     saveNeo,
@@ -53,7 +51,7 @@ describe('Neo', () => {
                    getFeed(TODAY, TODAY),
                    db.connectTo(MONGO_DB_URL)
                ])
-               .then(firstElement)
+               .then(_.head)
                .then(getNearEarthObjects)
                .then(prepareList)
                .then(fetchedList => (neoList = fetchedList))
@@ -69,7 +67,7 @@ describe('Neo', () => {
     });
 
     it('should be able to store a NEO', (done) => {
-        const params = firstElement((neoList));
+        const params = _.head(neoList);
 
         verifiedSave(params)
             .then(() => done())
@@ -77,7 +75,7 @@ describe('Neo', () => {
     });
 
     it('shouldn\'t contain multiple NEOs', (done) => {
-        const params = firstElement((neoList));
+        const params = _.head(neoList);
 
         verifiedSave(params)
             .then(() => saveNeo(params))

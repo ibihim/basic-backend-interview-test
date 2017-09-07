@@ -1,5 +1,7 @@
 'use strict';
 
+const _          = require('lodash/fp');
+const expect     = require('chai').expect;
 const request    = require('supertest');
 const HttpStatus = require('http-status-codes');
 
@@ -7,7 +9,7 @@ const ROOT = '../../../../..';
 const app = require(`${ ROOT }/app`);
 const db = require(`${ ROOT }/lib/db`);
 const worker = require(`${ ROOT }/lib/nasa/worker`);
-const { 
+const {
     MONGO_DB_URL,
     findNeo,
     removeNeos
@@ -27,7 +29,7 @@ describe('fastest controller', () => {
         db.connectTo(MONGO_DB_URL)
             .then(() => worker.storeLastDays(5))
             .then(() => findNeo())
-            .then(foundNeos => storedNeos = foundNeos)
+            .then(foundNeos => (storedNeos = foundNeos))
             .then(() => done())
             .catch(done);
     });
@@ -50,19 +52,23 @@ describe('fastest controller', () => {
         }
     ].forEach(({ testName, isHazardous }) => {
         it(testName, (done) => {
-            const query = isHazardous ? '?hazardous=true' : ''
-            const fastestAsteroid = storedNeos.filter(neo => neo.isHazardous === isHazardous)
-                                              .reduce(compareNeoSpeed, nullSpeedNeo);
-    
+            const query           = isHazardous ? '?hazardous=true' : '';
+            const filterHazardous = _.filter(neo => neo.isHazardous === isHazardous);
+            const reduceToFastest = _.reduce(compareNeoSpeed, nullSpeedNeo);
+            const pickProperties  = _.pick([ 'reference', 'name', 'speed', 'isHazardous' ]);
+
+            const pickFastestAsteroid = _.pipe(filterHazardous, reduceToFastest, pickProperties);
+            const fastestAsteroid = pickFastestAsteroid(storedNeos);
+
             request(app)
+                .get(`/neo/fastest${ query }`)
                 .set('Accept', 'application/json')
-                .get(`/neo/fastest${query}`)
                 .expect('Content-Type', /json/)
-                .expect(
-                    HttpStatus.OK,
-                    fastestAsteroid,
-                    done
-                );
+                .expect(HttpStatus.OK)
+                .then(_.get('body'))
+                .then(neo => expect(pickProperties(neo)).to.deep.equal(fastestAsteroid))
+                .then(() => done())
+                .catch(done);
         });
     });
 });

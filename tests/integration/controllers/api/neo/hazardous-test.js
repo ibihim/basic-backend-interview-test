@@ -2,18 +2,20 @@
 
 const request    = require('supertest');
 const HttpStatus = require('http-status-codes');
+const _          = require('lodash/fp');
 
 const ROOT = '../../../../..';
 const app = require(`${ ROOT }/app`);
 const db = require(`${ ROOT }/lib/db`);
 const worker = require(`${ ROOT }/lib/nasa/worker`);
-const { 
+const {
     MONGO_DB_URL,
     findNeo,
-    removeNeos
+    removeNeos,
+    sameNeoListAs
 } = require(`${ ROOT }/tests/utils`);
 
-describe.only('hazardous controller', () => {
+describe('hazardous controller', () => {
 
     let storedNeos;
 
@@ -21,10 +23,7 @@ describe.only('hazardous controller', () => {
         db.connectTo(MONGO_DB_URL)
             .then(() => worker.storeLastDays(5))
             .then(() => findNeo({ isHazardous: true }))
-            .then(foundNeos => {
-                console.log(foundNeos);
-                storedNeos = foundNeos
-            })
+            .then(foundNeos => (storedNeos = foundNeos))
             .then(() => done())
             .catch(done);
     });
@@ -36,18 +35,14 @@ describe.only('hazardous controller', () => {
             .catch(done);
     });
 
-    it('should return a list of hazardous asteroids', (done) => {        
+    it('should return a list of hazardous asteroids', (done) => {
         request(app)
             .get('/neo/hazardous')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(HttpStatus.OK)
-            .then(response => {
-                console.log('storedNeos');
-                console.log(storedNeos);
-                console.log('response.body');
-                console.log(response.body);
-            })
+            .then(_.get('body'))
+            .then(sameNeoListAs(storedNeos))
             .then(() => done())
             .catch(done);
     });
