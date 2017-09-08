@@ -1,0 +1,82 @@
+{
+  "yearWithMostNeosAggregateObj": [
+    {
+      "$project": {
+        "year": { "$year": "$date" },
+        "isHazardous": 1
+      }
+    },
+    {
+      "$sortByCount": "$year"
+    },
+    {
+      "$limit": 1
+    }
+  ],
+  "yearWithMostHazardousNeosAggregateObj": [
+    {
+      "$match": { "isHazardous": true }
+    },
+    {
+      "$project": {
+        "year": { "$year": "$date" },
+        "isHazardous": 1
+      }
+    },
+    {
+      "$sortByCount": "$year"
+    },
+    {
+      "$limit": 1
+    }
+  ],
+  "monthWithMostNeosAggregateObj": [
+    {
+      "$project": {
+        "date": 1,
+        "isHazardous": 1
+      }
+    },
+    {
+      "$group": {
+        "_id": {
+          "month": { "$month": "$date" },
+          "year": { "$year": "$date" }
+        },
+        "count": { "$sum": 1 }
+      }
+    },
+    {
+      "$sort": { "count": -1 }
+    },
+    {
+      "$limit": 1
+    }
+  ],
+  "monthWithMostHazardousNeosAggregateObj": [
+    {
+      "$match": { "isHazardous": true }
+    },
+    {
+      "$project": {
+        "date": 1,
+        "isHazardous": 1
+      }
+    },
+    {
+      "$group": {
+        "_id": {
+          "month": { "$month": "$date" },
+          "year": { "$year": "$date" }
+        },
+        "count": { "$sum": 1 }
+      }
+    },
+    {
+      "$sort": { "count": -1 }
+    },
+    {
+      "$limit": 1
+    }
+  ]
+}

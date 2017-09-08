@@ -15,10 +15,7 @@ const makeNeoModel = () => {
             type: String,
             required: true
         },
-        speed: { // km/h
-            type: String,
-            required: true
-        },
+        speed: String,
         isHazardous: {
             type: Boolean,
             required: true
