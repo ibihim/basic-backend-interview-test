@@ -2,7 +2,7 @@
 
 const _      = require('lodash/fp');
 const moment = require('moment');
-const expect = require('chai').expect;
+const { expect } = require('chai');
 
 const ROOT = '../../..';
 const db = require(`${ ROOT }/lib/db`);

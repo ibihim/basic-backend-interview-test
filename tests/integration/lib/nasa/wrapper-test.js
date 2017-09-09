@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment');
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const _ = require('lodash/fp');
 
 const ROOT = '../../../..';

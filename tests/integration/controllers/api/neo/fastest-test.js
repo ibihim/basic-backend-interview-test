@@ -2,7 +2,7 @@
 
 const request    = require('supertest');
 const HttpStatus = require('http-status-codes');
-const expect     = require('chai').expect;
+const { expect } = require('chai');
 
 const ROOT = '../../../../..';
 const app = require(`${ ROOT }/app`);

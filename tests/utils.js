@@ -1,8 +1,8 @@
 'use strict';
 
-const _      = require('lodash/fp');
-const moment = require('moment');
-const expect = require('chai').expect;
+const _          = require('lodash/fp');
+const moment     = require('moment');
+const { expect } = require('chai');
 
 const ROOT                    = '..';
 const Neo                     = require(`${ ROOT }/models/Neo`);
@@ -10,7 +10,7 @@ const { DEFAULT_DATE_FORMAT } = require(`${ ROOT }/lib/constants`);
 const { getNearEarthObjects } = require(`${ ROOT }/lib/utils`);
 const neoCollection           = require(`${ ROOT }/tests/data`);
 
-const DEFAULT_MONGO_URL = 'mongodb://mongodb:27017/nasatest';
+const DEFAULT_MONGO_URL = 'mongodb://localhost:27017/nasatest';
 const MONGO_DB_URL      = process.env.MONGO_DB_URL || DEFAULT_MONGO_URL;
 
 const getNeoReferenceId = _.get('neo_reference_id');
@@ -20,12 +20,20 @@ const disjointLists     = ([ listA, listB ]) =>
 const sameListAs = expectedList => foundList =>
     expect(foundList.sort()).to.eql(expectedList.sort());
 
+const pickProperties = _.pick([ 'reference', 'name', 'speed', 'isHazardous' ]);
+
 const sameNeoListAs = expectedList => foundList => {
-    const pickProperties    = [ 'reference', 'name', 'speed', 'isHazardous' ];
-    const cleanExpectedList = _.map(_.pick(pickProperties), expectedList);
-    const cleanFoundList    = _.map(_.pick(pickProperties), foundList);
+    const cleanExpectedList = _.map(pickProperties, expectedList);
+    const cleanFoundList    = _.map(pickProperties, foundList);
 
     sameListAs(cleanExpectedList)(cleanFoundList);
+};
+
+const sameNeoAs = expectedNeo => foundNeo => {
+    const expectedNeoParamsToCheck = pickProperties(expectedNeo);
+    const foundNeoParamsToCheck = pickProperties(foundNeo);
+
+    expect(foundNeoParamsToCheck).to.deep.equal(expectedNeoParamsToCheck);
 };
 
 const checkListLength = expectedLength => list =>
@@ -74,6 +82,7 @@ module.exports = {
     disjointLists,
     sameListAs,
     sameNeoListAs,
+    sameNeoAs,
     checkListLength,
     createFormattedDaysList,
     saveNeo,

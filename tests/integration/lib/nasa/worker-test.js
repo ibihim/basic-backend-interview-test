@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash/fp');
-const expect = require('chai').expect;
+const { expect } = require('chai');
 
 const ROOT = '../../../..';
 const db = require(`${ ROOT }/lib/db`);
