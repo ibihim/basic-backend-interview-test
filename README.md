@@ -2,6 +2,10 @@
 
 Tracks Near-Earth Objects (NEOs).
 
+## How to start the webapp / worker
+
+TODO
+
 ## API
 
 ### GET /
@@ -80,7 +84,6 @@ TODO:
 - Check for Promises and if they are caught properly.
 - Check if necessary logging is happening.
 - Add documentation for lint, test and docker in docs folder
-- Add lusca and add user input validation
 
 ### Timezone
 
