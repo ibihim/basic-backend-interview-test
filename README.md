@@ -4,7 +4,9 @@ Tracks Near-Earth Objects (NEOs).
 
 ## How to start the webapp / worker
 
-TODO
+If you want to start everything by hand, please look into [How to run it by hand](./docs/execution.md).
+
+Otherwise, I would suggest to use docker-compose.
 
 ## API
 
@@ -20,14 +22,26 @@ Returns all potentially hazardous asteroids as JSON.
 
 __Response example:__
 
-TODO:
-```{
-    "date": "",
-    "reference": "",
-    "name": "",
-    "speed": "",
-    "isHazardous": ""
-}
+```JavaScript
+[
+    {
+        "date": "1979-12-17T00:00:00.000Z",
+        "reference": "3012393",
+        "name": "(1979 XB)",
+        "speed": "82895.208318495",
+        "isHazardous": true
+    },
+    {
+    
+        "date": "1915-08-02T00:00:00.000Z",
+        "reference": "3005942",
+        "name": "(1994 NE)",
+        "speed": "58926.4591259354",
+        "isHazardous": true,
+    
+    },
+    /* and far more */
+]
 ```
 
 ### GET /neo/fastest?hazardous=(true|false)
@@ -38,13 +52,15 @@ __Default:__ ```false```
 
 __Response example:__
 
-TODO:
-```{
-    "date": "",
-    "reference": "",
-    "name": "",
-    "speed": "",
-    "isHazardous": ""
+```JavaScript
+{
+
+    "date": "1902-11-19T00:00:00.000Z",
+    "reference": "2333755",
+    "name": "333755 (2010 VC1)",
+    "speed": "99991.3492707527",
+    "isHazardous": false
+
 }
 ```
 
@@ -54,11 +70,12 @@ Returns the year with the most asteroids. Can be narrowed down to hazardous aste
 
 __Response example:__
 
-TODO:
-```{
-    "year": "",
-    "asteroid_count": "",
-    "isHazardous": ""
+```JavaScript
+{
+
+    "year": 1900,
+    "count": 1235
+
 }
 ```
 
@@ -68,22 +85,24 @@ Returns the month with the most asteroids (TODO rolling month?). Can be narrowed
 
 __Response example:__
 
-TODO:
-```{
-    "year": "",
-    "asteroid_count": "",
-    "isHazardous": ""
+```JavaScript
+{
+
+    "month": 1,
+    "year": 1900,
+    "count": 119
+
 }
 ```
 
 ## Additional Information
 
-### TODOS
+### Additional Documents
 
-- Change model so that speed and date are Arrays, as Asteroids may meet the Earth more often than once.
-- Check for Promises and if they are caught properly.
-- Check if necessary logging is happening.
-- Add documentation for lint, test and docker in docs folder
+- [Tasks](./docs/tasks.md): The tasks that drove the soltion
+- [Assumptions](./docs/assumptions.md): Assumptions made during unclarity
+- [Next Steps](./docs/next-steps.md): Next steps, that one could make to make it fancier
+- [Execution](./docs/execution.md): Execution guide for webapp / worker / gulp tasks
 
 ### Timezone
 

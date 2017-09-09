@@ -13,7 +13,8 @@ router.get('/', (req, res) => {
                        .json(neos);
 
 
-    findFastestNeo({ isHazardous }).then(respond);
+    findFastestNeo({ isHazardous }).then(respond)
+                                   .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
 });
 
 module.exports = router;

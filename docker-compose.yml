@@ -8,12 +8,20 @@ services:
     ports:
       - 27017:27017
     restart: always
-  node:
+  webapp:
     depends_on:
       - mongoDB
     build: .
     ports:
-      - 8000:8000
+      - 80:8000
+    restart: always
+    environment:
+      - MONGO_DB_URL=mongodb://mongoDB:27017/nasa
+  worker:
+    command: ["node", "worker.js"]
+    depends_on:
+      - mongoDB
+    build: .
     restart: always
     environment:
       - MONGO_DB_URL=mongodb://mongoDB:27017/nasa
