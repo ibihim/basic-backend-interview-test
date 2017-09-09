@@ -7,25 +7,51 @@ const _          = require('lodash/fp');
 const ROOT = '../../../../..';
 const app = require(`${ ROOT }/app`);
 const db = require(`${ ROOT }/lib/db`);
-const worker = require(`${ ROOT }/lib/nasa/worker`);
 const {
     MONGO_DB_URL,
-    findNeo,
+    fillDbWithNeos,
     removeNeos,
     sameNeoListAs
 } = require(`${ ROOT }/tests/utils`);
 
-describe('hazardous controller', () => {
+const expected = [
+    {
+        _id: "59b3d541d46a77235155f2e8",
+        isHazardous: true,
+        name: "(1979 XB)",
+        reference: "3012393",
+        speed: "82895.208318495"
+    },
+    {
+        _id: "59b3d541d46a77235155f2fa",
+        isHazardous: true,
+        name: "(1994 NE)",
+        reference: "3005942",
+        speed: "58926.4591259354",
+    },
+    {
+        _id: "59b3d541d46a77235155f2fb",
+        isHazardous: true,
+        name: "000000000",
+        reference: "0000000",
+        speed: "1.0000000"
+    },
+    {
+        _id: "59b3d541d46a77235155f314",
+        isHazardous: true,
+        name: "(1997 GD32)",
+        reference: "3010077",
+        speed: "88119.6612737317"
+    }
+];
 
-    let storedNeos;
+describe('hazardous controller', () => {
 
     before(done => {
         db.connectTo(MONGO_DB_URL)
-            .then(() => worker.storeLastDays(5))
-            .then(() => findNeo({ isHazardous: true }))
-            .then(foundNeos => (storedNeos = foundNeos))
-            .then(() => done())
-            .catch(done);
+          .then(() => fillDbWithNeos())
+          .then(() => done())
+          .catch(done);
     });
 
     after(done => {
@@ -42,7 +68,7 @@ describe('hazardous controller', () => {
             .expect('Content-Type', /json/)
             .expect(HttpStatus.OK)
             .then(_.get('body'))
-            .then(sameNeoListAs(storedNeos))
+            .then(sameNeoListAs(expected))
             .then(() => done())
             .catch(done);
     });

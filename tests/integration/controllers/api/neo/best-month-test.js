@@ -1,28 +1,22 @@
 'use strict';
 
-const _          = require('lodash/fp');
 const request    = require('supertest');
 const HttpStatus = require('http-status-codes');
 
 const ROOT = '../../../../..';
 const app = require(`${ ROOT }/app`);
 const db = require(`${ ROOT }/lib/db`);
-const worker = require(`${ ROOT }/lib/nasa/worker`);
 const {
           MONGO_DB_URL,
-          findNeo,
+          fillDbWithNeos,
           removeNeos
       } = require(`${ ROOT }/tests/utils`);
 
 describe('best month controller', () => {
 
-    let storedNeos;
-
     before(done => {
         db.connectTo(MONGO_DB_URL)
-          .then(() => worker.storeLastDays(5))
-          .then(() => findNeo())
-          .then(foundNeos => (storedNeos = foundNeos))
+          .then(() => fillDbWithNeos())
           .then(() => done())
           .catch(done);
     });
@@ -37,13 +31,15 @@ describe('best month controller', () => {
     [
         {
             testName: 'should return the month with most hazardous asteroids',
-            isHazardous: true
+            isHazardous: true,
+            expectedResult: { month: 8, year: 1915, count: 2 }
         },
         {
             testName: 'should return the month with most non hazardous asteroids',
-            isHazardous: false
+            isHazardous: false,
+            expectedResult: { month: 10, year: 1991, count: 3 }
         }
-    ].forEach(({ testName, isHazardous }) => {
+    ].forEach(({ testName, isHazardous, expectedResult }) => {
         it(testName, (done) => {
             const query = isHazardous ? '?hazardous=true' : '';
 
@@ -51,11 +47,11 @@ describe('best month controller', () => {
                 .get(`/neo/best-month${ query }`)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
-                .expect(HttpStatus.OK)
-                .then(_.get('body'))
-                .then(console.log)
-                .then(() => done())
-                .catch(done);
+                .expect(
+                    HttpStatus.OK,
+                    expectedResult,
+                    done
+                );
         });
     });
 });

@@ -8,6 +8,7 @@ const ROOT                    = '..';
 const Neo                     = require(`${ ROOT }/models/Neo`);
 const { DEFAULT_DATE_FORMAT } = require(`${ ROOT }/lib/constants`);
 const { getNearEarthObjects } = require(`${ ROOT }/lib/utils`);
+const neoCollection           = require(`${ ROOT }/tests/data`);
 
 const DEFAULT_MONGO_URL = 'mongodb://mongodb:27017/nasatest';
 const MONGO_DB_URL      = process.env.MONGO_DB_URL || DEFAULT_MONGO_URL;
@@ -60,6 +61,10 @@ const removeNeos = () =>
         Neo.remove({}, err => err ? reject(err) : resolve(err))
     );
 
+const fillDbWithNeos = () => Promise.all(
+    neoCollection.map(saveNeo)
+);
+
 module.exports = {
     DEFAULT_MONGO_URL,
     MONGO_DB_URL,
@@ -73,5 +78,6 @@ module.exports = {
     createFormattedDaysList,
     saveNeo,
     findNeo,
-    removeNeos
+    removeNeos,
+    fillDbWithNeos
 };
