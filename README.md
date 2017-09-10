@@ -6,7 +6,8 @@ Tracks Near-Earth Objects (NEOs).
 
 If you want to start everything by hand, please look into [How to run it by hand](./docs/execution.md).
 
-Otherwise, I would suggest to use docker-compose.
+Otherwise, I would suggest to use docker-compose. FYI: If you start ```docker-compose up``` on an empty database,
+it will automatically start to crawl the NASA NEO API until it has all the data.
 
 ## API
 
