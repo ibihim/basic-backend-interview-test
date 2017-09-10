@@ -11,8 +11,6 @@ it will automatically start to crawl the NASA NEO API until it has all the data.
 
 ### docker-compose.yml information
 
-The docker-compose.yml file maps the port of the application to port 80. Don't get confused by the internal port of 8000 in the logs.
-
 The mongodb port is open for debuggin reasons on 27017. This is not a good idea in production environment.
 
 ## API
