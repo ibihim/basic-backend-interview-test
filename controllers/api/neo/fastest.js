@@ -1,20 +1,19 @@
 'use strict';
 
 const router = require('express').Router();
-const HttpStatus = require('http-status-codes');
 
-const ROOT               = '../../..';
-const { findFastestNeo } = require(`${ ROOT }/lib/neo`);
+const ROOT                     = '../../..';
+const { findFastestNeo }       = require(`${ ROOT }/lib/neo`);
+const {
+          controllerErrHandler,
+          controllerOkHandler,
+          simpleQueryValidation
+      } = require(`${ ROOT }/lib/utils`);
 
 router.get('/', (req, res) => {
-    const isHazardous = req.query.hazardous === 'true';
-    const respond = neos => res.status(HttpStatus.OK)
-                       .type('application/json')
-                       .json(neos);
-
-
-    findFastestNeo({ isHazardous }).then(respond)
-                                   .catch(() => res.status(HttpStatus.INTERNAL_SERVER_ERROR));
+    findFastestNeo(simpleQueryValidation(req))
+        .then(controllerOkHandler(res))
+        .catch(controllerErrHandler(res));
 });
 
 module.exports = router;

@@ -1,6 +1,9 @@
 {
   "yearWithMostNeosAggregateObj": [
     {
+      "$match": { "date": { "$exists": true, "$ne": null } }
+    },
+    {
       "$project": {
         "year": { "$year": "$date" },
         "isHazardous": 1
@@ -15,7 +18,10 @@
   ],
   "yearWithMostHazardousNeosAggregateObj": [
     {
-      "$match": { "isHazardous": true }
+      "$match": {
+        "isHazardous": true,
+        "date": { "$exists": true, "$ne": null }
+      }
     },
     {
       "$project": {
@@ -31,6 +37,9 @@
     }
   ],
   "monthWithMostNeosAggregateObj": [
+    {
+      "$match": { "date": { "$exists": true, "$ne": null } }
+    },
     {
       "$project": {
         "date": 1,
@@ -55,7 +64,10 @@
   ],
   "monthWithMostHazardousNeosAggregateObj": [
     {
-      "$match": { "isHazardous": true }
+      "$match": {
+        "isHazardous": true,
+        "date": { "$exists": true, "$ne": null }
+      }
     },
     {
       "$project": {

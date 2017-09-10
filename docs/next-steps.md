@@ -37,3 +37,13 @@ readable. In order to do so, I would need to switch from lodash/fp to lodash.
 
 I like the thought of a data stream, which is easily modelled with lodash/fp 
 functions which switch the order of arguments and adding curry to it.
+
+## Improve Aggregate Queries
+
+The aggregate queries used have repetitive code. It didn't work at first try to
+use parameters. It could be good to investigate it more deeply and fix that.
+
+## Add validation
+
+The current query check should be secure, but for more complex validation, it
+would be better to use a less error prone solution.
